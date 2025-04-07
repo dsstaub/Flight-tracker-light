@@ -14,9 +14,7 @@ form.addEventListener("submit", (e) => {
   }
 });
 
-sortSelect.addEventListener("change", () => {
-  renderFlightList();
-});
+sortSelect.addEventListener("change", renderFlightList);
 
 function addFlight(flightNum) {
   const now = new Date();
@@ -40,7 +38,6 @@ function addFlight(flightNum) {
 
 function renderFlightList() {
   const sortBy = sortSelect.value;
-
   flights.sort((a, b) => {
     if (sortBy === "eta") return a.eta - b.eta;
     return (a[sortBy] || "").localeCompare(b[sortBy] || "");
@@ -48,11 +45,8 @@ function renderFlightList() {
 
   list.innerHTML = "";
   flights.forEach((flight) => {
-    const existing = document.getElementById(`card-${flight.flightNumber}`);
-    if (existing) existing.remove();
-
     const card = document.createElement("div");
-    card.className = "flight-card";
+    card.className = `flight-card ${flight.isMainline ? "mainline" : "regional"}`;
     card.id = `card-${flight.flightNumber}`;
 
     const bar = document.createElement("div");
@@ -71,6 +65,7 @@ function renderFlightList() {
       <div class="flight-row">
         <div>Origin: ${flight.origin}</div>
         <div>Aircraft: ${flight.aircraftType}</div>
+        <div>Status: ${flight.status}</div>
       </div>
       <div class="flight-row bold">
         <div>Gate: ${flight.gate}</div>
@@ -110,15 +105,18 @@ function updateCountdown(flight) {
   timer.textContent = `${prefix}${minutes}:${seconds}`;
 
   const card = document.getElementById(`card-${flight.flightNumber}`);
+  card.classList.remove("on-time", "warning-mainline", "warning-regional", "urgent", "expired");
+
   if (diff <= 0) {
-    card.className = "flight-card expired";
+    card.classList.add("expired");
   } else if (diff <= 300) {
-    card.className = "flight-card urgent";
+    card.classList.add("urgent");
   } else if (diff <= 900) {
-    card.className = "flight-card warning";
+    card.classList.add(flight.isMainline ? "warning-mainline" : "warning-regional");
   } else {
-    card.className = "flight-card on-time";
+    card.classList.add("on-time");
   }
+
   if (flight.collapsed) card.classList.add("collapsed");
 }
 
