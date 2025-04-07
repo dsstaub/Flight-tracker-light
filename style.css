@@ -102,9 +102,22 @@ button {
 }
 
 .urgent {
-  background-color: #ffeb3b;
-  color: black;
-  animation: pulseYellow 2s infinite ease-in-out;
+  animation: pulseYellow 4s infinite ease-in-out;
+}
+
+@keyframes pulseYellow {
+  0% {
+    background-color: #ffeb3b;
+    color: black;
+  }
+  75% {
+    background-color: #ffeb3b;
+    color: black;
+  }
+  100% {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: white;
+  }
 }
 
 .expired {
@@ -112,8 +125,3 @@ button {
   color: white;
 }
 
-@keyframes pulseYellow {
-  0%   { background-color: #ffeb3b; }
-  50%  { background-color: rgba(255,255,255,0.1); }
-  100% { background-color: #ffeb3b; }
-}
