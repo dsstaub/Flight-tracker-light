@@ -59,18 +59,21 @@ function renderFlightList() {
 
     content.innerHTML = `
       <div class="flight-row flight-row-main bold">
-        <div>Flight ${flight.flightNumber}</div>
-        <div id="timer-${flight.flightNumber}">--:--</div>
+        <div>${flight.collapsed ? `${flight.flightNumber}` : `Flight ${flight.flightNumber}`}</div>
+        <div>${flight.collapsed ? `Gate ${flight.gate}` : `<span id="timer-${flight.flightNumber}">--:--</span>`}</div>
+        ${flight.collapsed ? `<div id="timer-${flight.flightNumber}">--:--</div>` : ''}
       </div>
-      <div class="flight-row">
-        <div>Origin: ${flight.origin}</div>
-        <div>Aircraft: ${flight.aircraftType}</div>
-        <div>Status: ${flight.status}</div>
-      </div>
-      <div class="flight-row bold">
-        <div>Gate: ${flight.gate}</div>
-        <div>ETA: ${formatTime(flight.eta)}</div>
-      </div>
+      ${!flight.collapsed ? `
+        <div class="flight-row">
+          <div>Origin: ${flight.origin}</div>
+          <div>Aircraft: ${flight.aircraftType}</div>
+          <div>Status: ${flight.status}</div>
+        </div>
+        <div class="flight-row bold">
+          <div>Gate: ${flight.gate}</div>
+          <div>ETA: ${formatTime(flight.eta)}</div>
+        </div>
+      ` : ''}
     `;
 
     content.addEventListener("click", () => {
