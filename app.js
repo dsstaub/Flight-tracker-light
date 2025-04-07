@@ -105,12 +105,23 @@ function updateCountdown(flight) {
   timer.textContent = `${prefix}${minutes}:${seconds}`;
 
   const card = document.getElementById(`card-${flight.flightNumber}`);
-  card.classList.remove("on-time", "warning-mainline", "warning-regional", "urgent", "expired");
+  card.classList.remove(
+    "on-time",
+    "warning-mainline",
+    "warning-regional",
+    "urgent",
+    "expired",
+    "mainline",
+    "regional"
+  );
+
+  card.classList.add(flight.isMainline ? "mainline" : "regional");
 
   if (diff <= 0) {
     card.classList.add("expired");
   } else if (diff <= 300) {
     card.classList.add("urgent");
+    card.classList.add(flight.isMainline ? "mainline" : "regional");
   } else if (diff <= 900) {
     card.classList.add(flight.isMainline ? "warning-mainline" : "warning-regional");
   } else {
