@@ -49,10 +49,6 @@ button {
   transition: background-color 0.5s ease;
 }
 
-.flight-card.collapsed .flight-content > *:not(.flight-row-main) {
-  display: none;
-}
-
 .flight-bar {
   width: 6px;
 }
@@ -73,6 +69,7 @@ button {
   font-size: 16px;
   margin-bottom: 4px;
 }
+
 .flight-row > div {
   flex: 1;
 }
@@ -83,6 +80,35 @@ button {
 
 .bold {
   font-weight: bold;
+}
+
+/* Folded card layout */
+.flight-card.collapsed .flight-content {
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+.flight-card.collapsed .flight-row-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 18px;
+  padding: 0;
+}
+
+.flight-card.collapsed .flight-row-main > div {
+  flex: 1;
+  text-align: center;
+}
+
+.flight-card.collapsed .flight-row-main > div:first-child {
+  text-align: left;
+  padding-left: 6px;
+}
+
+.flight-card.collapsed .flight-row-main > div:last-child {
+  text-align: right;
+  padding-right: 6px;
 }
 
 /* Base states */
@@ -106,32 +132,29 @@ button {
   color: white;
 }
 
-/* Urgent state pulsing between yellow and blue/red */
+/* Urgent pulse state */
 .urgent.mainline {
-  animation: pulseYellowMainlineBG 5s infinite ease-in-out;
+  animation: pulseYellowMainlineBG 4s infinite ease-in-out;
 }
 .urgent.regional {
-  animation: pulseYellowRegionalBG 5s infinite ease-in-out;
+  animation: pulseYellowRegionalBG 4s infinite ease-in-out;
 }
 
 .flight-card.urgent .flight-content {
-  animation: pulseYellowText 5s infinite ease-in-out;
+  animation: pulseYellowText 4s infinite ease-in-out;
 }
 
 @keyframes pulseYellowMainlineBG {
-  0%, 60% { background-color: #ffeb3b; }
-  80%     { background-color: #007aff; }
-  100%    { background-color: #ffeb3b; }
+  0%, 49% { background-color: #ffeb3b; }
+  50%, 100% { background-color: #007aff; }
 }
 
 @keyframes pulseYellowRegionalBG {
-  0%, 60% { background-color: #ffeb3b; }
-  80%     { background-color: #ff3b30; }
-  100%    { background-color: #ffeb3b; }
+  0%, 49% { background-color: #ffeb3b; }
+  50%, 100% { background-color: #ff3b30; }
 }
 
 @keyframes pulseYellowText {
-  0%, 60% { color: black; }
-  80%     { color: white; }
-  100%    { color: black; }
+  0%, 49% { color: black; }
+  50%, 100% { color: white; }
 }
