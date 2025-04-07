@@ -1,1 +1,57 @@
 
+body {
+  background-color: #111;
+  color: #fff;
+  font-family: sans-serif;
+  margin: 0;
+  padding: 20px;
+}
+
+.container {
+  max-width: 600px;
+  margin: auto;
+}
+
+form {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+input[type="text"] {
+  flex: 1;
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px 0 0 4px;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  background: #007aff;
+  color: white;
+  cursor: pointer;
+  border-radius: 0 4px 4px 0;
+}
+
+.card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.flight-card {
+  background-color: #222;
+  padding: 16px;
+  border-radius: 8px;
+  border-left: 4px solid #007aff;
+}
+
+.flight-card h2 {
+  margin: 0 0 8px;
+}
+
+.flight-info {
+  margin: 4px 0;
+}
