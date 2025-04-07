@@ -60,18 +60,19 @@ function renderFlightList() {
     content.innerHTML = `
       <div class="flight-row flight-row-main bold">
         <div>${flight.collapsed ? `${flight.flightNumber}` : `Flight ${flight.flightNumber}`}</div>
-        <div>${flight.collapsed ? `Gate ${flight.gate}` : `<span id="timer-${flight.flightNumber}">--:--</span>`}</div>
-        ${flight.collapsed ? `<div id="timer-${flight.flightNumber}">--:--</div>` : ''}
+        <div class="fixed-timer">
+          ${flight.collapsed ? '' : `(<span id="eta-${flight.flightNumber}">${formatTime(flight.eta)}</span>)`} 
+          <span id="timer-${flight.flightNumber}">--:--</span>
+        </div>
       </div>
       ${!flight.collapsed ? `
         <div class="flight-row">
           <div>Origin: ${flight.origin}</div>
           <div>Aircraft: ${flight.aircraftType}</div>
-          <div>Status: ${flight.status}</div>
-        </div>
-        <div class="flight-row bold">
           <div>Gate: ${flight.gate}</div>
-          <div>ETA: ${formatTime(flight.eta)}</div>
+        </div>
+        <div class="flight-row">
+          <div>Status: ${flight.status}</div>
         </div>
       ` : ''}
     `;
@@ -98,6 +99,7 @@ function updateCountdown(flight) {
   const now = new Date();
   let diff = Math.floor((flight.eta - now) / 1000);
   const timer = document.getElementById(`timer-${flight.flightNumber}`);
+  const eta = document.getElementById(`eta-${flight.flightNumber}`);
   if (!timer) return;
 
   const absDiff = Math.abs(diff);
@@ -106,6 +108,7 @@ function updateCountdown(flight) {
   const prefix = diff < 0 ? "-" : "";
 
   timer.textContent = `${prefix}${minutes}:${seconds}`;
+  if (eta) eta.textContent = formatTime(flight.eta);
 
   const card = document.getElementById(`card-${flight.flightNumber}`);
   card.classList.remove(
