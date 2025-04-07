@@ -75,6 +75,9 @@ button {
 }
 
 .flight-row-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   font-size: 20px;
 }
 
@@ -82,18 +85,17 @@ button {
   font-weight: bold;
 }
 
-/* Folded card layout */
+/* Fixed width timer */
+.fixed-timer {
+  font-family: monospace;
+  min-width: 68px;
+  text-align: right;
+}
+
+/* Collapsed layout */
 .flight-card.collapsed .flight-content {
   padding-top: 6px;
   padding-bottom: 6px;
-}
-
-.flight-card.collapsed .flight-row-main {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 18px;
-  padding: 0;
 }
 
 .flight-card.collapsed .flight-row-main > div {
@@ -111,7 +113,7 @@ button {
   padding-right: 6px;
 }
 
-/* Base states */
+/* Statuses */
 .on-time {
   background-color: #222;
   color: white;
@@ -132,14 +134,13 @@ button {
   color: white;
 }
 
-/* Urgent pulse state */
+/* Pulsing alert */
 .urgent.mainline {
   animation: pulseYellowMainlineBG 4s infinite ease-in-out;
 }
 .urgent.regional {
   animation: pulseYellowRegionalBG 4s infinite ease-in-out;
 }
-
 .flight-card.urgent .flight-content {
   animation: pulseYellowText 4s infinite ease-in-out;
 }
