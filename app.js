@@ -1,83 +1,115 @@
 const form = document.getElementById("flight-form");
 const input = document.getElementById("flight-input");
 const list = document.getElementById("flight-list");
+const sortSelect = document.getElementById("sort-select");
+
+let flights = [];
 
 form.addEventListener("submit", (e) => {
   e.preventDefault();
   const flightNum = input.value.trim();
   if (flightNum) {
-    addFlightCard(flightNum);
+    addFlight(flightNum);
     input.value = "";
   }
 });
 
-function addFlightCard(flightNum) {
-  // Mock data
-  const now = new Date();
-  const eta = new Date(now.getTime() + Math.floor(Math.random() * 60 + 5) * 60000); // ETA 5–65 minutes from now
+sortSelect.addEventListener("change", () => {
+  renderFlightList();
+});
 
-  const mockData = {
+function addFlight(flightNum) {
+  const now = new Date();
+  const eta = new Date(now.getTime() + Math.floor(Math.random() * 60 + 5) * 60000);
+
+  const flight = {
     flightNumber: flightNum,
     origin: "DFW",
     aircraftType: "A319",
     status: "En Route",
     eta,
-    gate: "B24"
+    gate: "B24",
+    isMainline: isMainlineFlight(flightNum),
+    collapsed: false
   };
 
-  const card = document.createElement("div");
-  card.className = "flight-card";
+  flights.push(flight);
+  renderFlightList();
+  setInterval(() => updateCountdown(flight), 1000);
+}
 
-  const isMainline = isMainlineFlight(flightNum);
-  const color = isMainline ? "#007aff" : "#ff3b30";
-  const bar = document.createElement("div");
-  bar.className = "flight-bar";
-  bar.style.backgroundColor = color;
+function renderFlightList() {
+  const sortBy = sortSelect.value;
 
-  const content = document.createElement("div");
-  content.className = "flight-content";
-  content.innerHTML = `
-    <div class="flight-row bold">
-      <div>Flight ${mockData.flightNumber}</div>
-      <div id="timer-${flightNum}">--:--</div>
-    </div>
-    <div class="flight-row">
-      <div>Origin: ${mockData.origin}</div>
-      <div>Aircraft: ${mockData.aircraftType}</div>
-    </div>
-    <div class="flight-row bold">
-      <div>Gate: ${mockData.gate}</div>
-      <div>ETA: ${formatTime(mockData.eta)}</div>
-    </div>
-  `;
+  flights.sort((a, b) => {
+    if (sortBy === "eta") return a.eta - b.eta;
+    return (a[sortBy] || "").localeCompare(b[sortBy] || "");
+  });
 
-  card.appendChild(bar);
-  card.appendChild(content);
-  list.appendChild(card);
+  list.innerHTML = "";
+  flights.forEach((flight) => {
+    const existing = document.getElementById(`card-${flight.flightNumber}`);
+    if (existing) existing.remove();
 
-  updateCountdown(card, flightNum, mockData.eta, isMainline);
-  setInterval(() => updateCountdown(card, flightNum, mockData.eta, isMainline), 1000);
+    const card = document.createElement("div");
+    card.className = "flight-card";
+    card.id = `card-${flight.flightNumber}`;
+
+    const bar = document.createElement("div");
+    bar.className = "flight-bar";
+    bar.style.backgroundColor = flight.isMainline ? "#007aff" : "#ff3b30";
+
+    const content = document.createElement("div");
+    content.className = "flight-content";
+    if (flight.collapsed) card.classList.add("collapsed");
+
+    content.innerHTML = `
+      <div class="flight-row flight-row-main bold">
+        <div>Flight ${flight.flightNumber}</div>
+        <div id="timer-${flight.flightNumber}">--:--</div>
+      </div>
+      <div class="flight-row">
+        <div>Origin: ${flight.origin}</div>
+        <div>Aircraft: ${flight.aircraftType}</div>
+      </div>
+      <div class="flight-row bold">
+        <div>Gate: ${flight.gate}</div>
+        <div>ETA: ${formatTime(flight.eta)}</div>
+      </div>
+    `;
+
+    content.addEventListener("click", () => {
+      flight.collapsed = !flight.collapsed;
+      renderFlightList();
+    });
+
+    card.appendChild(bar);
+    card.appendChild(content);
+    list.appendChild(card);
+    updateCountdown(flight);
+  });
 }
 
 function formatTime(date) {
-  const h = date.getHours().toString().padStart(2, '0');
-  const m = date.getMinutes().toString().padStart(2, '0');
+  const h = date.getHours().toString().padStart(2, "0");
+  const m = date.getMinutes().toString().padStart(2, "0");
   return `${h}:${m}`;
 }
 
-function updateCountdown(card, flightNum, eta, isMainline) {
+function updateCountdown(flight) {
   const now = new Date();
-  let diff = Math.floor((eta - now) / 1000);
-  const timer = document.getElementById(`timer-${flightNum}`);
+  let diff = Math.floor((flight.eta - now) / 1000);
+  const timer = document.getElementById(`timer-${flight.flightNumber}`);
+  if (!timer) return;
 
   const absDiff = Math.abs(diff);
-  const minutes = Math.floor(absDiff / 60).toString().padStart(2, '0');
-  const seconds = (absDiff % 60).toString().padStart(2, '0');
+  const minutes = Math.floor(absDiff / 60).toString().padStart(2, "0");
+  const seconds = (absDiff % 60).toString().padStart(2, "0");
   const prefix = diff < 0 ? "-" : "";
 
   timer.textContent = `${prefix}${minutes}:${seconds}`;
 
-  // Update background based on timing
+  const card = document.getElementById(`card-${flight.flightNumber}`);
   if (diff <= 0) {
     card.className = "flight-card expired";
   } else if (diff <= 300) {
@@ -87,10 +119,7 @@ function updateCountdown(card, flightNum, eta, isMainline) {
   } else {
     card.className = "flight-card on-time";
   }
-
-  // Keep the left color bar consistent
-  const bar = card.querySelector(".flight-bar");
-  bar.style.backgroundColor = isMainline ? "#007aff" : "#ff3b30";
+  if (flight.collapsed) card.classList.add("collapsed");
 }
 
 function isMainlineFlight(flightNum) {
