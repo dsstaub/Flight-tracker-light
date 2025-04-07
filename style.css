@@ -85,7 +85,7 @@ button {
   font-weight: bold;
 }
 
-/* Background states */
+/* Base states */
 .on-time {
   background-color: #222;
   color: white;
@@ -101,34 +101,37 @@ button {
   color: white;
 }
 
-.urgent {
-  animation: pulseYellowBG 4s infinite ease-in-out;
-}
-
-.flight-card.urgent .flight-content {
-  animation: pulseYellowText 4s infinite ease-in-out;
-}
-
-@keyframes pulseYellowBG {
-  0%, 75% {
-    background-color: #ffeb3b;
-  }
-  100% {
-    background-color: rgba(255, 255, 255, 0.05);
-  }
-}
-
-@keyframes pulseYellowText {
-  0%, 75% {
-    color: black;
-  }
-  100% {
-    color: white;
-  }
-}
-
 .expired {
   background-color: #5c1111;
   color: white;
 }
 
+/* Urgent state pulsing between yellow and blue/red */
+.urgent.mainline {
+  animation: pulseYellowMainlineBG 5s infinite ease-in-out;
+}
+.urgent.regional {
+  animation: pulseYellowRegionalBG 5s infinite ease-in-out;
+}
+
+.flight-card.urgent .flight-content {
+  animation: pulseYellowText 5s infinite ease-in-out;
+}
+
+@keyframes pulseYellowMainlineBG {
+  0%, 60% { background-color: #ffeb3b; }
+  80%     { background-color: #007aff; }
+  100%    { background-color: #ffeb3b; }
+}
+
+@keyframes pulseYellowRegionalBG {
+  0%, 60% { background-color: #ffeb3b; }
+  80%     { background-color: #ff3b30; }
+  100%    { background-color: #ffeb3b; }
+}
+
+@keyframes pulseYellowText {
+  0%, 60% { color: black; }
+  80%     { color: white; }
+  100%    { color: black; }
+}
