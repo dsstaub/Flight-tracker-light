@@ -11,17 +11,18 @@ body {
   margin: auto;
 }
 
-form {
+form, .sort-options {
   display: flex;
   margin-bottom: 20px;
+  gap: 10px;
 }
 
-input[type="text"] {
+input[type="text"], select {
   flex: 1;
   padding: 10px;
   font-size: 18px;
   border: none;
-  border-radius: 4px 0 0 4px;
+  border-radius: 4px;
 }
 
 button {
@@ -31,7 +32,7 @@ button {
   background: #007aff;
   color: white;
   cursor: pointer;
-  border-radius: 0 4px 4px 0;
+  border-radius: 4px;
 }
 
 .card-list {
@@ -46,7 +47,11 @@ button {
   border-radius: 8px;
   overflow: hidden;
   min-height: 80px;
-  transition: background-color 0.5s;
+  transition: background-color 0.5s ease;
+}
+
+.flight-card.collapsed .flight-content > *:not(.flight-row-main) {
+  display: none;
 }
 
 .flight-bar {
@@ -59,6 +64,7 @@ button {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  cursor: pointer;
 }
 
 .flight-row {
@@ -68,15 +74,15 @@ button {
   margin-bottom: 4px;
 }
 
-.flight-row:last-child {
-  margin-bottom: 0;
+.flight-row-main {
+  font-size: 20px;
 }
 
 .bold {
   font-weight: bold;
 }
 
-/* Color logic for countdown */
+/* Color transitions */
 .on-time {
   background-color: #222;
 }
