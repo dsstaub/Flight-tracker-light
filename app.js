@@ -57,25 +57,21 @@ function renderFlightList() {
     content.className = "flight-content";
     if (flight.collapsed) card.classList.add("collapsed");
 
-    content.innerHTML = `
-      <div class="flight-row flight-row-main bold">
-        <div>${flight.collapsed ? `${flight.flightNumber}` : `Flight ${flight.flightNumber}`}</div>
-        <div class="fixed-timer">
-          ${flight.collapsed ? '' : `(<span id="eta-${flight.flightNumber}">${formatTime(flight.eta)}</span>)`} 
-          <span id="timer-${flight.flightNumber}">--:--</span>
-        </div>
-      </div>
-      ${!flight.collapsed ? `
-        <div class="flight-row">
-          <div>Origin: ${flight.origin}</div>
-          <div>Aircraft: ${flight.aircraftType}</div>
-          <div>Gate: ${flight.gate}</div>
-        </div>
-        <div class="flight-row">
-          <div>Status: ${flight.status}</div>
-        </div>
-      ` : ''}
-    `;
+    const topRow = `
+      <div class="flight-row flight-row-main">
+        <div>${flight.flightNumber}${flight.collapsed ? "" : ` (${flight.aircraftType})`}</div>
+        <div>${flight.collapsed ? `Gate ${flight.gate}` : `ETA: <span id="eta-${flight.flightNumber}">${formatTime(flight.eta)}</span>`}</div>
+        <div class="fixed-timer"><span id="timer-${flight.flightNumber}">--:--</span></div>
+      </div>`;
+
+    const midRows = flight.collapsed ? "" : `
+      <div class="flight-row">
+        <div>Origin: ${flight.origin}</div>
+        <div>${flight.status}</div>
+        <div>Gate: ${flight.gate}</div>
+      </div>`;
+
+    content.innerHTML = topRow + midRows;
 
     content.addEventListener("click", () => {
       flight.collapsed = !flight.collapsed;
