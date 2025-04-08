@@ -18,11 +18,10 @@ body {
   margin-bottom: 10px;
 }
 
-/* HEADER FIX */
 .header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 12px;
   margin-bottom: 20px;
   padding: 0 4px;
@@ -31,8 +30,8 @@ body {
 
 /* HAMBURGER MENU */
 .hamburger {
-  width: 30px;
-  height: 24px;
+  width: 36px;
+  height: 30px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -42,9 +41,6 @@ body {
   cursor: pointer;
   flex-shrink: 0;
   z-index: 10;
-  /* Uncomment for debug:
-  background-color: red;
-  */
 }
 
 .bar {
@@ -58,17 +54,29 @@ body {
 .hamburger.open .bar:nth-child(1) {
   transform: rotate(45deg) translate(5px, 5px);
 }
-
 .hamburger.open .bar:nth-child(2) {
   opacity: 0;
 }
-
 .hamburger.open .bar:nth-child(3) {
   transform: rotate(-45deg) translate(6px, -6px);
 }
-
 .hamburger:hover .bar {
   background-color: #aaa;
+}
+
+form {
+  flex: 1;
+  max-width: calc(100% - 48px); /* 36px button + 12px gap */
+  flex-shrink: 1;
+  min-width: 0;
+}
+
+input[type="text"], select {
+  padding: 10px;
+  font-size: 18px;
+  border: none;
+  border-radius: 4px;
+  width: 100%;
 }
 
 #filter-panel {
@@ -77,20 +85,6 @@ body {
 }
 #filter-panel.open {
   display: block;
-}
-
-/* Form & input sizing */
-form {
-  flex-grow: 1;
-  flex-shrink: 1;
-  min-width: 0;
-}
-input[type="text"], select {
-  padding: 10px;
-  font-size: 18px;
-  border: none;
-  border-radius: 4px;
-  width: 100%;
 }
 
 .card-list {
@@ -152,18 +146,15 @@ input[type="text"], select {
   font-size: 18px;
   flex: 1;
 }
-
 .flight-card.collapsed .flight-row > div:first-child {
   text-align: left;
   padding-left: 6px;
 }
-
 .flight-card.collapsed .flight-row > div:last-child {
   text-align: right;
   padding-right: 6px;
 }
 
-/* Status Colors */
 .on-time {
   background-color: #222;
   color: white;
@@ -181,7 +172,6 @@ input[type="text"], select {
   color: white;
 }
 
-/* Pulsing Yellow Alert */
 .urgent.mainline {
   animation: pulseYellowMainlineBG 4s infinite ease-in-out;
 }
@@ -196,12 +186,10 @@ input[type="text"], select {
   0%, 49% { background-color: #ffeb3b; }
   50%, 100% { background-color: #007aff; }
 }
-
 @keyframes pulseYellowRegionalBG {
   0%, 49% { background-color: #ffeb3b; }
   50%, 100% { background-color: #ff3b30; }
 }
-
 @keyframes pulseYellowText {
   0%, 49% { color: black; }
   50%, 100% { color: white; }
