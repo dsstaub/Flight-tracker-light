@@ -32,7 +32,7 @@ sortSelect.addEventListener("change", () => renderFlightList());
 async function fetchFlightData(flightNum) {
   try {
     const response = await fetch(
-      `https://app.goflightlabs.com/flights?airline_iata=AA&flight_iata=AA${flightNum}`,
+      `https://app.goflightlabs.com/schedules?flight_iata=AA${flightNum}`,
       {
         headers: {
           Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI0IiwianRpIjoiYzllOWQ3OWFjMjRmMTVlNTAyYzQwY2VkMWVhYmJlMmZlZDQ0MGUxZjVlZmM2NGVkYmUyYzJjYTg1MDcwNGZjOGE0MjkwMDNhNzNlMGNiMWMiLCJpYXQiOjE3NDQwNTM2NjQsIm5iZiI6MTc0NDA1MzY2NCwiZXhwIjoxNzc1NTg5NjY0LCJzdWIiOiIyNDY1MSIsInNjb3BlcyI6W119.VKNBhtc4r72wE7K57W61MsNMfcmmhqlTW331XDtN3jd6mekMFJsmojJZZsWOlhO5Dp76BFwATwzqpcDxcNp9IQ`
@@ -41,16 +41,18 @@ async function fetchFlightData(flightNum) {
     );
 
     const result = await response.json();
-    const data = result?.data?.[0];
+    const data = result?.data?.find(f => f.flight?.iata === `AA${flightNum}`);
 
-    const eta = data?.arrival?.estimated || new Date(Date.now() + 60 * 60000);
+    if (!data) throw new Error("No schedule data returned");
+
+    const eta = new Date(data?.arrival?.estimated || Date.now() + 60 * 60000);
     const flight = {
       flightNumber: flightNum,
-      tailNumber: data?.aircraft?.registration || "Unknown",
+      tailNumber: "Unknown",
       origin: data?.departure?.iata || "???",
-      aircraftType: data?.aircraft?.icao || "Unknown",
+      aircraftType: data?.aircraft?.icao || data?.aircraft?.iata || "Unknown",
       status: data?.flight_status || "Scheduled",
-      eta: new Date(eta),
+      eta: eta,
       gate: data?.arrival?.gate || "TBD",
       isMainline: isMainlineFlight(flightNum),
       collapsed: true
@@ -60,7 +62,7 @@ async function fetchFlightData(flightNum) {
     renderFlightList();
     setInterval(() => updateCountdown(flight), 1000);
   } catch (error) {
-    console.error("FlightLabs error:", error);
+    console.error("FlightLabs schedule error:", error);
     alert(`Could not fetch data for Flight ${flightNum}.`);
   }
 }
@@ -159,8 +161,5 @@ function updateCountdown(flight) {
 
 function isMainlineFlight(flightNum) {
   const num = parseInt(flightNum);
-  return (
-    (num >= 1 && num <= 2949) ||
-    (num >= 6300 && num <= 6349)
-  );
+  return (num >= 1 && num <= 2949) || (num >= 6300 && num <= 6349);
 }
