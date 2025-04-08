@@ -4,25 +4,23 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Flight Tracker</title>
-  <link rel="icon" href="favicon.png" type="image/png">
-  <link rel="apple-touch-icon" href="icon-512.png">
-  <link rel="manifest" href="manifest.json">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="Flight Tracker">
-  <meta name="theme-color" content="#0b0f19">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <link rel="apple-touch-startup-image" href="splash-1024.png">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
-    <h1>Flight Tracker</h1>
-    <form id="flight-form">
-      <input type="text" id="flight-input" placeholder="Enter flight number (e.g., 1992)" required />
-      <button type="submit">Add Flight</button>
-    </form>
-    <div class="sort-options">
-      <label for="sort-select">Sort by:</label>
+    <div class="header">
+      <button id="hamburger" class="hamburger" aria-label="Toggle filter menu">
+        <svg id="hamburger-icon" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        <svg id="close-icon" viewBox="0 0 24 24" style="display: none;"><path d="M6 6l12 12M6 18L18 6"/></svg>
+      </button>
+
+      <form id="flight-form" style="flex: 1;">
+        <input type="text" id="flight-input" placeholder="Enter 4-digit flight #" maxlength="4" required />
+      </form>
+    </div>
+
+    <div id="filter-panel">
+      <label for="sort-select" style="margin-right: 10px;">Sort by:</label>
       <select id="sort-select">
         <option value="eta">ETA (Default)</option>
         <option value="flightNumber">Flight Number</option>
@@ -32,6 +30,7 @@
         <option value="status">Flight Status</option>
       </select>
     </div>
+
     <div id="flight-list" class="card-list"></div>
   </div>
   <script src="app.js"></script>
