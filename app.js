@@ -34,7 +34,6 @@ async function fetchFlightData(flightNum) {
 
   let flight = null;
 
-  // First try /schedules
   try {
     const res1 = await fetch(
       `https://app.goflightlabs.com/schedules?flight_iata=AA${flightNum}`,
@@ -60,31 +59,33 @@ async function fetchFlightData(flightNum) {
     console.error("Schedule fetch error", err);
   }
 
-  // Fallback: try /flights if schedule gave nothing
   if (!flight) {
     try {
       const res2 = await fetch(
-        `https://app.goflightlabs.com/flights?airline_iata=AA&flight_iata=AA${flightNum}`,
+        `https://app.goflightlabs.com/flights?airline_iata=AA`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       const json2 = await res2.json();
-      const data = json2?.data?.find(f => f.flight?.iata === `AA${flightNum}`);
 
-      if (data) {
+      const match = json2?.data?.find(
+        f => f.flight?.iata === `AA${flightNum}`
+      );
+
+      if (match) {
         flight = {
           flightNumber: flightNum,
-          tailNumber: data?.aircraft?.registration || "Unknown",
-          origin: data?.departure?.iata || "???",
-          aircraftType: data?.aircraft?.icao || data?.aircraft?.iata || "Unknown",
-          status: data?.flight_status || "En Route",
-          eta: new Date(data?.arrival?.estimated || Date.now() + 60 * 60000),
-          gate: data?.arrival?.gate || "TBD",
+          tailNumber: match?.aircraft?.registration || "Unknown",
+          origin: match?.departure?.iata || "???",
+          aircraftType: match?.aircraft?.icao || match?.aircraft?.iata || "Unknown",
+          status: match?.flight_status || "En Route",
+          eta: new Date(match?.arrival?.estimated || Date.now() + 60 * 60000),
+          gate: match?.arrival?.gate || "TBD",
           isMainline: isMainlineFlight(flightNum),
           collapsed: true
         };
       }
     } catch (err) {
-      console.error("Flights fallback error", err);
+      console.error("Flight fallback error", err);
     }
   }
 
