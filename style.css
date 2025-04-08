@@ -28,7 +28,6 @@ body {
   min-height: 40px;
 }
 
-/* HAMBURGER MENU */
 .hamburger {
   width: 36px;
   height: 30px;
@@ -66,7 +65,7 @@ body {
 
 form {
   flex: 1;
-  max-width: calc(100% - 48px); /* 36px button + 12px gap */
+  max-width: calc(100% - 48px);
   flex-shrink: 1;
   min-width: 0;
 }
@@ -137,11 +136,14 @@ input[type="text"], select {
   text-align: right;
 }
 
-.flight-card.collapsed .flight-content {
-  padding-top: 6px;
-  padding-bottom: 6px;
+/* COLLAPSED CARD: HALF HEIGHT */
+.flight-card.collapsed {
+  min-height: 40px;
 }
-
+.flight-card.collapsed .flight-content {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
 .flight-card.collapsed .flight-row > div {
   font-size: 18px;
   flex: 1;
