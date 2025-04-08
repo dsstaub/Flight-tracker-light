@@ -11,27 +11,21 @@ body {
   margin: auto;
 }
 
-form, .sort-options {
+.header {
   display: flex;
-  margin-bottom: 20px;
+  align-items: center;
   gap: 10px;
 }
 
-input[type="text"], select {
+#flight-form {
   flex: 1;
+}
+
+input[type="text"], select {
+  width: 100%;
   padding: 10px;
   font-size: 18px;
   border: none;
-  border-radius: 4px;
-}
-
-button {
-  padding: 10px 20px;
-  font-size: 18px;
-  border: none;
-  background: #007aff;
-  color: white;
-  cursor: pointer;
   border-radius: 4px;
 }
 
@@ -43,13 +37,16 @@ button {
 
 .flight-card {
   position: relative;
-  background: #222;
-  border-left: 6px solid #007aff;
-  padding: 12px;
-  margin: 10px;
-  transition: transform 0.2s ease;
-  touch-action: pan-y;
+  display: flex;
+  border-radius: 8px;
   overflow: hidden;
+  transition: background-color 0.5s ease, transform 0.2s ease;
+  touch-action: pan-y;
+  background-color: #222;
+}
+
+.flight-card.collapsed .flight-content > *:not(.flight-row-main) {
+  display: none;
 }
 
 .flight-bar {
@@ -57,39 +54,64 @@ button {
 }
 
 .flight-content {
-  position: relative;
-  z-index: 1;
-  background: #222;
-  transition: background 0.3s;
-}
-
-.card-actions {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  width: 180px;
+  padding: 12px 16px;
+  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: stretch;
-  background: #333;
-  z-index: 0;
+  background-color: inherit;
+  z-index: 2;
 }
 
-.card-actions button {
-  padding: 10px;
+.flight-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+.flight-row > div {
+  flex: 1;
+}
+
+.flight-row-main {
+  font-size: 20px;
+}
+
+.bold {
   font-weight: bold;
-  font-size: 14px;
-  border: none;
-  background: #444;
-  color: white;
-  cursor: pointer;
-  border-top: 1px solid #222;
 }
 
-.card-actions button:hover {
-  background: #666;
+/* Background states */
+.on-time {
+  background-color: #222;
+}
+
+.warning-mainline {
+  background-color: #007aff;
+}
+
+.warning-regional {
+  background-color: #ff3b30;
+}
+
+.urgent {
+  animation: pulseYellow 4s infinite ease-in-out;
+}
+
+@keyframes pulseYellow {
+  0%, 75% {
+    background-color: #ffeb3b;
+    color: black;
+  }
+  100% {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: white;
+  }
+}
+
+.expired {
+  background-color: #5c1111;
 }
 
 .swipe-NW {
@@ -107,8 +129,36 @@ button {
   border-left-color: #28a745 !important;
 }
 
+.card-actions {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  background: #333;
+  width: 100px;
+  justify-content: center;
+  align-items: stretch;
+  z-index: 1;
+}
+
+.card-actions button {
+  background: #444;
+  border: none;
+  padding: 10px;
+  color: white;
+  font-weight: bold;
+  border-top: 1px solid #222;
+  cursor: pointer;
+}
+
+.card-actions button:hover {
+  background: #666;
+}
+
 .swipe-settings {
-  margin-top: 12px;
+  margin-top: 16px;
   font-size: 14px;
   color: #ccc;
 }
