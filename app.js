@@ -104,7 +104,6 @@ function renderFlightList() {
     card.appendChild(bar);
     card.appendChild(content);
     list.appendChild(card);
-    updateCountdown(flight);
   });
 }
 
@@ -142,7 +141,7 @@ function updateCountdown(flight) {
     card.classList.add("on-time");
   }
 
-  // Smart auto toggle based on ETA and manual tap
+  // Auto-toggle behavior
   const within15Min = diff <= 900;
   const timeSinceToggle = flight.manualToggleTime ? (Date.now() - flight.manualToggleTime) / 1000 : Infinity;
 
@@ -156,13 +155,13 @@ function updateCountdown(flight) {
     flight.manualToggleTime = null;
   }
 
-  if (flight.collapsed) card.classList.add("collapsed");
+  renderFlightList(); // force visual re-render after state change
 }
 
 function isMainlineFlight(flightNum) {
   const num = parseInt(flightNum);
   return (
-    (num >= 1 && num <= 2949) || 
+    (num >= 1 && num <= 2949) ||
     (num >= 6300 && num <= 6349)
   );
 }
