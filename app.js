@@ -70,7 +70,6 @@ function renderFlightList() {
 
     const content = document.createElement("div");
     content.className = "flight-content";
-    if (flight.collapsed) card.classList.add("collapsed");
 
     const flightLabel = flight.collapsed
       ? flight.flightNumber
@@ -97,6 +96,10 @@ function renderFlightList() {
       flight.manualToggleTime = Date.now();
       renderFlightList();
     });
+
+    if (flight.collapsed) {
+      card.classList.add("collapsed");
+    }
 
     card.appendChild(bar);
     card.appendChild(content);
@@ -139,7 +142,7 @@ function updateCountdown(flight) {
     card.classList.add("on-time");
   }
 
-  // TIMING-BASED COLLAPSE/EXPAND
+  // Smart auto toggle based on ETA and manual tap
   const within15Min = diff <= 900;
   const timeSinceToggle = flight.manualToggleTime ? (Date.now() - flight.manualToggleTime) / 1000 : Infinity;
 
