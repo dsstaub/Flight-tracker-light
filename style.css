@@ -196,3 +196,24 @@ input[type="text"], select {
   0%, 49% { color: black; }
   50%, 100% { color: white; }
 }
+
+.swipe-settings {
+  margin-top: 12px;
+  font-size: 14px;
+  color: #ccc;
+}
+
+.flight-card.swipe-delete {
+  background-color: #5c1111 !important;
+  border-left-color: red !important;
+}
+
+.flight-card.swipe-serviced {
+  background-color: #1b3f25 !important;
+  border-left-color: #28a745 !important;
+}
+
+.flight-card {
+  touch-action: pan-y;
+  transition: transform 0.2s ease;
+}
