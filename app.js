@@ -102,6 +102,8 @@ function renderFlightList() {
     card.appendChild(bar);
     card.appendChild(content);
     list.appendChild(card);
+
+    updateCountdown(flight); // Initial timer fill
   });
 }
 
@@ -139,7 +141,6 @@ function updateCountdown(flight) {
     card.classList.add("on-time");
   }
 
-  // Smart toggle logic without re-rendering
   const within15Min = diff <= 900;
   const timeSinceToggle = flight.manualToggleTime ? (Date.now() - flight.manualToggleTime) / 1000 : Infinity;
 
@@ -190,6 +191,9 @@ function updateCardLayout(flight) {
   } else {
     card.classList.remove("collapsed");
   }
+
+  // Re-apply updated timer and ETA immediately after layout change
+  updateCountdown(flight);
 }
 
 function isMainlineFlight(flightNum) {
