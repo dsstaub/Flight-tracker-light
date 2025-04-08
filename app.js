@@ -8,7 +8,6 @@ const filterPanel = document.getElementById("filter-panel");
 let flights = [];
 
 hamburger.addEventListener("click", () => {
-  hamburger.classList.toggle("open");
   filterPanel.classList.toggle("open");
 });
 
@@ -19,35 +18,51 @@ input.addEventListener("input", (e) => {
   }
 });
 
-form.addEventListener("submit", (e) => {
+form.addEventListener("submit", async (e) => {
   e.preventDefault();
   const flightNum = input.value.trim();
   if (flightNum && /^\d{4}$/.test(flightNum)) {
-    addFlight(flightNum);
     input.value = "";
+    await fetchFlightData(flightNum);
   }
 });
 
 sortSelect.addEventListener("change", () => renderFlightList());
 
-function addFlight(flightNum) {
-  const now = new Date();
-  const eta = new Date(now.getTime() + Math.floor(Math.random() * 60 + 5) * 60000);
-  const flight = {
-    flightNumber: flightNum,
-    tailNumber: "N844NN",
-    origin: "DFW",
-    aircraftType: "A319",
-    status: "En Route",
-    eta,
-    gate: "B24",
-    isMainline: isMainlineFlight(flightNum),
-    collapsed: true
-  };
+async function fetchFlightData(flightNum) {
+  try {
+    const response = await fetch(
+      `https://app.goflightlabs.com/flights?airline_iata=AA&flight_iata=AA${flightNum}`,
+      {
+        headers: {
+          Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI0IiwianRpIjoiYzllOWQ3OWFjMjRmMTVlNTAyYzQwY2VkMWVhYmJlMmZlZDQ0MGUxZjVlZmM2NGVkYmUyYzJjYTg1MDcwNGZjOGE0MjkwMDNhNzNlMGNiMWMiLCJpYXQiOjE3NDQwNTM2NjQsIm5iZiI6MTc0NDA1MzY2NCwiZXhwIjoxNzc1NTg5NjY0LCJzdWIiOiIyNDY1MSIsInNjb3BlcyI6W119.VKNBhtc4r72wE7K57W61MsNMfcmmhqlTW331XDtN3jd6mekMFJsmojJZZsWOlhO5Dp76BFwATwzqpcDxcNp9IQ`
+        }
+      }
+    );
 
-  flights.push(flight);
-  renderFlightList();
-  setInterval(() => updateCountdown(flight), 1000);
+    const result = await response.json();
+    const data = result?.data?.[0];
+
+    const eta = data?.arrival?.estimated || new Date(Date.now() + 60 * 60000);
+    const flight = {
+      flightNumber: flightNum,
+      tailNumber: data?.aircraft?.registration || "Unknown",
+      origin: data?.departure?.iata || "???",
+      aircraftType: data?.aircraft?.icao || "Unknown",
+      status: data?.flight_status || "Scheduled",
+      eta: new Date(eta),
+      gate: data?.arrival?.gate || "TBD",
+      isMainline: isMainlineFlight(flightNum),
+      collapsed: true
+    };
+
+    flights.push(flight);
+    renderFlightList();
+    setInterval(() => updateCountdown(flight), 1000);
+  } catch (error) {
+    console.error("FlightLabs error:", error);
+    alert(`Could not fetch data for Flight ${flightNum}.`);
+  }
 }
 
 function renderFlightList() {
@@ -100,6 +115,7 @@ function renderFlightList() {
     card.appendChild(bar);
     card.appendChild(content);
     list.appendChild(card);
+
     updateCountdown(flight);
   });
 }
