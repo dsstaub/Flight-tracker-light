@@ -2,19 +2,37 @@ const form = document.getElementById("flight-form");
 const input = document.getElementById("flight-input");
 const list = document.getElementById("flight-list");
 const sortSelect = document.getElementById("sort-select");
+const hamburger = document.getElementById("hamburger");
+const hamburgerIcon = document.getElementById("hamburger-icon");
+const closeIcon = document.getElementById("close-icon");
+const filterPanel = document.getElementById("filter-panel");
 
 let flights = [];
+
+// Toggle hamburger menu
+hamburger.addEventListener("click", () => {
+  const isOpen = hamburger.classList.toggle("open");
+  filterPanel.classList.toggle("open", isOpen);
+  hamburgerIcon.style.display = isOpen ? "none" : "block";
+  closeIcon.style.display = isOpen ? "block" : "none";
+});
+
+// Restrict to numeric, 4-digit auto-submit
+input.addEventListener("input", (e) => {
+  e.target.value = e.target.value.replace(/\D/g, "");
+  if (e.target.value.length === 4) {
+    form.requestSubmit();
+  }
+});
 
 form.addEventListener("submit", (e) => {
   e.preventDefault();
   const flightNum = input.value.trim();
-  if (flightNum) {
+  if (flightNum && /^\d{4}$/.test(flightNum)) {
     addFlight(flightNum);
     input.value = "";
   }
 });
-
-sortSelect.addEventListener("change", renderFlightList);
 
 function addFlight(flightNum) {
   const now = new Date();
@@ -107,23 +125,12 @@ function updateCountdown(flight) {
   if (eta) eta.textContent = formatTime(flight.eta);
 
   const card = document.getElementById(`card-${flight.flightNumber}`);
-  card.classList.remove(
-    "on-time",
-    "warning-mainline",
-    "warning-regional",
-    "urgent",
-    "expired",
-    "mainline",
-    "regional"
-  );
-
-  card.classList.add(flight.isMainline ? "mainline" : "regional");
+  card.className = `flight-card ${flight.isMainline ? "mainline" : "regional"}`;
 
   if (diff <= 0) {
     card.classList.add("expired");
   } else if (diff <= 300) {
-    card.classList.add("urgent");
-    card.classList.add(flight.isMainline ? "mainline" : "regional");
+    card.classList.add("urgent", flight.isMainline ? "mainline" : "regional");
   } else if (diff <= 900) {
     card.classList.add(flight.isMainline ? "warning-mainline" : "warning-regional");
   } else {
