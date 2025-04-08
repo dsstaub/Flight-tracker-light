@@ -15,18 +15,33 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
+  margin-bottom: 16px;
 }
 
-#flight-form {
-  flex: 1;
-}
-
-input[type="text"], select {
-  width: 100%;
-  padding: 10px;
-  font-size: 18px;
+.hamburger {
+  background: none;
   border: none;
-  border-radius: 4px;
+  padding: 6px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bar {
+  width: 24px;
+  height: 3px;
+  background-color: white;
+  border-radius: 2px;
+}
+
+#filter-panel {
+  display: none;
+  margin-bottom: 16px;
+}
+
+#filter-panel.open {
+  display: block;
 }
 
 .card-list {
