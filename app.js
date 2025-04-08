@@ -42,8 +42,7 @@ function addFlight(flightNum) {
     eta,
     gate: "B24",
     isMainline: isMainlineFlight(flightNum),
-    collapsed: true,
-    manualToggleTime: null,
+    collapsed: true
   };
 
   flights.push(flight);
@@ -93,7 +92,6 @@ function renderFlightList() {
 
     content.addEventListener("click", () => {
       flight.collapsed = !flight.collapsed;
-      flight.manualToggleTime = Date.now();
       renderFlightList();
     });
 
@@ -102,8 +100,7 @@ function renderFlightList() {
     card.appendChild(bar);
     card.appendChild(content);
     list.appendChild(card);
-
-    updateCountdown(flight); // Initial timer fill
+    updateCountdown(flight);
   });
 }
 
@@ -116,17 +113,17 @@ function formatTime(date) {
 function updateCountdown(flight) {
   const now = new Date();
   let diff = Math.floor((flight.eta - now) / 1000);
-  const timerEl = document.getElementById(`timer-${flight.flightNumber}`);
-  const etaEl = document.getElementById(`eta-${flight.flightNumber}`);
-  if (!timerEl) return;
+  const timer = document.getElementById(`timer-${flight.flightNumber}`);
+  const eta = document.getElementById(`eta-${flight.flightNumber}`);
+  if (!timer) return;
 
   const absDiff = Math.abs(diff);
   const minutes = Math.floor(absDiff / 60).toString().padStart(2, "0");
   const seconds = (absDiff % 60).toString().padStart(2, "0");
   const prefix = diff < 0 ? "-" : "";
 
-  timerEl.textContent = `${prefix}${minutes}:${seconds}`;
-  if (etaEl) etaEl.textContent = formatTime(flight.eta);
+  timer.textContent = `${prefix}${minutes}:${seconds}`;
+  if (eta) eta.textContent = formatTime(flight.eta);
 
   const card = document.getElementById(`card-${flight.flightNumber}`);
   card.className = `flight-card ${flight.isMainline ? "mainline" : "regional"}`;
@@ -141,59 +138,7 @@ function updateCountdown(flight) {
     card.classList.add("on-time");
   }
 
-  const within15Min = diff <= 900;
-  const timeSinceToggle = flight.manualToggleTime ? (Date.now() - flight.manualToggleTime) / 1000 : Infinity;
-
-  const shouldBeCollapsed = !within15Min;
-  if (!flight.manualToggleTime) {
-    flight.collapsed = shouldBeCollapsed;
-    updateCardLayout(flight);
-  } else if (shouldBeCollapsed && !flight.collapsed && timeSinceToggle > 30) {
-    flight.collapsed = true;
-    flight.manualToggleTime = null;
-    updateCardLayout(flight);
-  } else if (!shouldBeCollapsed && flight.collapsed && timeSinceToggle > 30) {
-    flight.collapsed = false;
-    flight.manualToggleTime = null;
-    updateCardLayout(flight);
-  }
-}
-
-function updateCardLayout(flight) {
-  const card = document.getElementById(`card-${flight.flightNumber}`);
-  if (!card) return;
-
-  const content = card.querySelector(".flight-content");
-  if (!content) return;
-
-  const flightLabel = flight.collapsed
-    ? flight.flightNumber
-    : `${flight.flightNumber} [${flight.tailNumber}] (${flight.aircraftType})`;
-
-  const topRow = `
-    <div class="flight-row flight-row-main">
-      <div>${flightLabel}</div>
-      <div>${flight.collapsed ? `Gate ${flight.gate}` : flight.gate}</div>
-      <div class="fixed-timer"><span id="timer-${flight.flightNumber}">--:--</span></div>
-    </div>`;
-
-  const midRows = flight.collapsed ? "" : `
-    <div class="flight-row">
-      <div>Origin: ${flight.origin}</div>
-      <div>${flight.status}</div>
-      <div>ETA: <span id="eta-${flight.flightNumber}">${formatTime(flight.eta)}</span></div>
-    </div>`;
-
-  content.innerHTML = topRow + midRows;
-
-  if (flight.collapsed) {
-    card.classList.add("collapsed");
-  } else {
-    card.classList.remove("collapsed");
-  }
-
-  // Re-apply updated timer and ETA immediately after layout change
-  updateCountdown(flight);
+  if (flight.collapsed) card.classList.add("collapsed");
 }
 
 function isMainlineFlight(flightNum) {
