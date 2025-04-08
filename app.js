@@ -30,73 +30,32 @@ form.addEventListener("submit", async (e) => {
 sortSelect.addEventListener("change", () => renderFlightList());
 
 async function fetchFlightData(flightNum) {
-  const token = `eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI0IiwianRpIjoiYzllOWQ3OWFjMjRmMTVlNTAyYzQwY2VkMWVhYmJlMmZlZDQ0MGUxZjVlZmM2NGVkYmUyYzJjYTg1MDcwNGZjOGE0MjkwMDNhNzNlMGNiMWMiLCJpYXQiOjE3NDQwNTM2NjQsIm5iZiI6MTc0NDA1MzY2NCwiZXhwIjoxNzc1NTg5NjY0LCJzdWIiOiIyNDY1MSIsInNjb3BlcyI6W119.VKNBhtc4r72wE7K57W61MsNMfcmmhqlTW331XDtN3jd6mekMFJsmojJZZsWOlhO5Dp76BFwATwzqpcDxcNp9IQ`;
-
-  let flight = null;
-
   try {
-    const res1 = await fetch(
-      `https://app.goflightlabs.com/schedules?flight_iata=AA${flightNum}`,
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-    const json1 = await res1.json();
-    const data = json1?.data?.find(f => f.flight?.iata === `AA${flightNum}`);
+    const response = await fetch(`https://flight-tracker-light.onrender.com/api/flight/${flightNum}`);
+    if (!response.ok) throw new Error("No data found");
 
-    if (data) {
-      flight = {
-        flightNumber: flightNum,
-        tailNumber: "Unknown",
-        origin: data?.departure?.iata || "???",
-        aircraftType: data?.aircraft?.icao || data?.aircraft?.iata || "Unknown",
-        status: data?.flight_status || "Scheduled",
-        eta: new Date(data?.arrival?.estimated || Date.now() + 60 * 60000),
-        gate: data?.arrival?.gate || "TBD",
-        isMainline: isMainlineFlight(flightNum),
-        collapsed: true
-      };
-    }
+    const data = await response.json();
+    const eta = new Date(data?.arrival?.estimated || Date.now() + 60 * 60000);
+
+    const flight = {
+      flightNumber: flightNum,
+      tailNumber: data?.registration || data?.aircraft?.registration || "Unknown",
+      origin: data?.dep_iata || data?.departure?.iata || "???",
+      aircraftType: data?.aircraft_icao || data?.aircraft?.icao || "Unknown",
+      status: data?.status || data?.flight_status || "Scheduled",
+      eta: eta,
+      gate: data?.arr_gate || data?.arrival?.gate || "TBD",
+      isMainline: isMainlineFlight(flightNum),
+      collapsed: true
+    };
+
+    flights.push(flight);
+    renderFlightList();
+    setInterval(() => updateCountdown(flight), 1000);
   } catch (err) {
-    console.error("Schedule fetch error", err);
-  }
-
-  if (!flight) {
-    try {
-      const res2 = await fetch(
-        `https://app.goflightlabs.com/flights?airline_iata=AA`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      const json2 = await res2.json();
-
-      const match = json2?.data?.find(
-        f => f.flight?.iata === `AA${flightNum}`
-      );
-
-      if (match) {
-        flight = {
-          flightNumber: flightNum,
-          tailNumber: match?.aircraft?.registration || "Unknown",
-          origin: match?.departure?.iata || "???",
-          aircraftType: match?.aircraft?.icao || match?.aircraft?.iata || "Unknown",
-          status: match?.flight_status || "En Route",
-          eta: new Date(match?.arrival?.estimated || Date.now() + 60 * 60000),
-          gate: match?.arrival?.gate || "TBD",
-          isMainline: isMainlineFlight(flightNum),
-          collapsed: true
-        };
-      }
-    } catch (err) {
-      console.error("Flight fallback error", err);
-    }
-  }
-
-  if (!flight) {
+    console.error(err);
     alert(`No data found for AA${flightNum}`);
-    return;
   }
-
-  flights.push(flight);
-  renderFlightList();
-  setInterval(() => updateCountdown(flight), 1000);
 }
 
 function renderFlightList() {
