@@ -18,21 +18,23 @@ body {
   margin-bottom: 20px;
 }
 
+/* Hamburger Menu Button */
 .hamburger {
   width: 30px;
-  height: 25px;
-  background: none;
-  border: none;
-  cursor: pointer;
+  height: 24px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
 }
 
 .bar {
+  width: 100%;
   height: 3px;
-  background-color: #fff;
+  background-color: white;
   border-radius: 2px;
   transition: all 0.3s ease;
 }
@@ -49,14 +51,21 @@ body {
   transform: rotate(-45deg) translate(6px, -6px);
 }
 
+.hamburger:hover .bar {
+  background-color: #aaa;
+}
+
+/* Filter Panel Toggle */
 #filter-panel {
   display: none;
   margin-bottom: 20px;
 }
+
 #filter-panel.open {
   display: block;
 }
 
+/* Input + Select */
 input[type="text"], select {
   padding: 10px;
   font-size: 18px;
@@ -99,6 +108,7 @@ input[type="text"], select {
   font-size: 16px;
   margin-bottom: 4px;
 }
+
 .flight-row > div {
   flex: 1;
   text-align: center;
@@ -115,6 +125,7 @@ input[type="text"], select {
   text-align: right;
 }
 
+/* Collapsed Card Formatting */
 .flight-card.collapsed .flight-content {
   padding-top: 6px;
   padding-bottom: 6px;
@@ -135,6 +146,7 @@ input[type="text"], select {
   padding-right: 6px;
 }
 
+/* Card States */
 .on-time {
   background-color: #222;
   color: white;
@@ -155,12 +167,15 @@ input[type="text"], select {
   color: white;
 }
 
+/* Urgent: Animated Yellow Pulse */
 .urgent.mainline {
   animation: pulseYellowMainlineBG 4s infinite ease-in-out;
 }
+
 .urgent.regional {
   animation: pulseYellowRegionalBG 4s infinite ease-in-out;
 }
+
 .flight-card.urgent .flight-content {
   animation: pulseYellowText 4s infinite ease-in-out;
 }
