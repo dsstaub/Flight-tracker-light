@@ -11,18 +11,51 @@ body {
   margin: auto;
 }
 
-form, .sort-options {
+.header {
   display: flex;
+  align-items: center;
+  gap: 12px;
   margin-bottom: 20px;
-  gap: 10px;
+}
+
+.hamburger {
+  width: 32px;
+  height: 32px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hamburger svg {
+  width: 28px;
+  height: 28px;
+  fill: white;
+  transition: transform 0.3s ease;
+}
+
+.hamburger.open svg {
+  transform: rotate(90deg);
+}
+
+#filter-panel {
+  display: none;
+  margin-bottom: 20px;
+}
+
+#filter-panel.open {
+  display: block;
 }
 
 input[type="text"], select {
-  flex: 1;
   padding: 10px;
   font-size: 18px;
   border: none;
   border-radius: 4px;
+  width: 100%;
 }
 
 button {
@@ -86,7 +119,6 @@ button {
   text-align: right;
 }
 
-/* Collapsed layout */
 .flight-card.collapsed .flight-content {
   padding-top: 6px;
   padding-bottom: 6px;
@@ -107,7 +139,6 @@ button {
   padding-right: 6px;
 }
 
-/* Statuses */
 .on-time {
   background-color: #222;
   color: white;
@@ -128,7 +159,6 @@ button {
   color: white;
 }
 
-/* Pulsing alert */
 .urgent.mainline {
   animation: pulseYellowMainlineBG 4s infinite ease-in-out;
 }
