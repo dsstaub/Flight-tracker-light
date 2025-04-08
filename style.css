@@ -36,13 +36,11 @@ input[type="text"], select {
 }
 
 .flight-card {
-  position: relative;
   display: flex;
   border-radius: 8px;
   overflow: hidden;
-  transition: background-color 0.5s ease, transform 0.2s ease;
-  touch-action: pan-y;
-  background-color: #222;
+  min-height: 80px;
+  transition: background-color 0.5s ease;
 }
 
 .flight-card.collapsed .flight-content > *:not(.flight-row-main) {
@@ -59,8 +57,7 @@ input[type="text"], select {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background-color: inherit;
-  z-index: 2;
+  cursor: pointer;
 }
 
 .flight-row {
@@ -82,17 +79,19 @@ input[type="text"], select {
   font-weight: bold;
 }
 
-/* Background states */
 .on-time {
   background-color: #222;
+  color: white;
 }
 
 .warning-mainline {
   background-color: #007aff;
+  color: white;
 }
 
 .warning-regional {
   background-color: #ff3b30;
+  color: white;
 }
 
 .urgent {
@@ -100,7 +99,11 @@ input[type="text"], select {
 }
 
 @keyframes pulseYellow {
-  0%, 75% {
+  0% {
+    background-color: #ffeb3b;
+    color: black;
+  }
+  75% {
     background-color: #ffeb3b;
     color: black;
   }
@@ -112,53 +115,5 @@ input[type="text"], select {
 
 .expired {
   background-color: #5c1111;
-}
-
-.swipe-NW {
-  background-color: #005f99 !important;
-  border-left-color: #005f99 !important;
-}
-
-.swipe-NL {
-  background-color: #663399 !important;
-  border-left-color: #663399 !important;
-}
-
-.swipe-NS {
-  background-color: #1b3f25 !important;
-  border-left-color: #28a745 !important;
-}
-
-.card-actions {
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  display: flex;
-  flex-direction: column;
-  background: #333;
-  width: 100px;
-  justify-content: center;
-  align-items: stretch;
-  z-index: 1;
-}
-
-.card-actions button {
-  background: #444;
-  border: none;
-  padding: 10px;
   color: white;
-  font-weight: bold;
-  border-top: 1px solid #222;
-  cursor: pointer;
-}
-
-.card-actions button:hover {
-  background: #666;
-}
-
-.swipe-settings {
-  margin-top: 16px;
-  font-size: 14px;
-  color: #ccc;
 }
