@@ -6,10 +6,19 @@ const hamburger = document.getElementById("hamburger");
 const filterPanel = document.getElementById("filter-panel");
 
 let flights = [];
+let swipeSetting = localStorage.getItem("swipeSetting") || "left-service";
 
 hamburger.addEventListener("click", () => {
   hamburger.classList.toggle("open");
   filterPanel.classList.toggle("open");
+});
+
+document.querySelectorAll('input[name="swipe"]').forEach(input => {
+  input.onclick = () => {
+    swipeSetting = input.value;
+    localStorage.setItem("swipeSetting", swipeSetting);
+  };
+  if (input.value === swipeSetting) input.checked = true;
 });
 
 input.addEventListener("input", (e) => {
@@ -101,6 +110,51 @@ function renderFlightList() {
     card.appendChild(content);
     list.appendChild(card);
     updateCountdown(flight);
+
+    enableSwipe(card, flight.flightNumber);
+  });
+}
+
+function enableSwipe(card, flightNumber) {
+  let startX = 0;
+  let currentX = 0;
+  let threshold = 60;
+  let active = false;
+
+  card.addEventListener("touchstart", (e) => {
+    startX = e.touches[0].clientX;
+    active = true;
+  });
+
+  card.addEventListener("touchmove", (e) => {
+    if (!active) return;
+    currentX = e.touches[0].clientX - startX;
+    card.style.transform = `translateX(${currentX}px)`;
+  });
+
+  card.addEventListener("touchend", () => {
+    if (!active) return;
+    active = false;
+
+    if (Math.abs(currentX) > threshold) {
+      const swipedLeft = currentX < 0;
+      const shouldService = (swipeSetting === "left-service" && swipedLeft) || (swipeSetting === "left-delete" && !swipedLeft);
+
+      if (shouldService) {
+        card.classList.remove("swipe-delete");
+        card.classList.add("swipe-serviced");
+        card.style.transform = "translateX(0)";
+      } else {
+        card.classList.remove("swipe-serviced");
+        card.classList.add("swipe-delete");
+        card.style.transform = "translateX(100%)";
+        setTimeout(() => card.remove(), 300);
+      }
+    } else {
+      card.style.transform = "translateX(0)";
+    }
+
+    currentX = 0;
   });
 }
 
