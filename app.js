@@ -3,21 +3,17 @@ const input = document.getElementById("flight-input");
 const list = document.getElementById("flight-list");
 const sortSelect = document.getElementById("sort-select");
 const hamburger = document.getElementById("hamburger");
-const hamburgerIcon = document.getElementById("hamburger-icon");
-const closeIcon = document.getElementById("close-icon");
 const filterPanel = document.getElementById("filter-panel");
 
 let flights = [];
 
-// Toggle hamburger menu
+// Hamburger toggle
 hamburger.addEventListener("click", () => {
-  const isOpen = hamburger.classList.toggle("open");
-  filterPanel.classList.toggle("open", isOpen);
-  hamburgerIcon.style.display = isOpen ? "none" : "block";
-  closeIcon.style.display = isOpen ? "block" : "none";
+  hamburger.classList.toggle("open");
+  filterPanel.classList.toggle("open");
 });
 
-// Restrict to numeric, 4-digit auto-submit
+// Input: numeric only + 4 digit auto-submit
 input.addEventListener("input", (e) => {
   e.target.value = e.target.value.replace(/\D/g, "");
   if (e.target.value.length === 4) {
@@ -34,10 +30,11 @@ form.addEventListener("submit", (e) => {
   }
 });
 
+sortSelect.addEventListener("change", () => renderFlightList());
+
 function addFlight(flightNum) {
   const now = new Date();
   const eta = new Date(now.getTime() + Math.floor(Math.random() * 60 + 5) * 60000);
-
   const flight = {
     flightNumber: flightNum,
     origin: "DFW",
