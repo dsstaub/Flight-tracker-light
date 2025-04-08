@@ -72,6 +72,19 @@ function renderFlightList() {
     card.className = `flight-card ${flight.isMainline ? "mainline" : "regional"}`;
     card.id = `card-${flight.flightNumber}`;
 
+    const actions = document.createElement("div");
+    actions.className = "card-actions";
+    ["NW", "NL", "NS"].forEach(code => {
+      const btn = document.createElement("button");
+      btn.textContent = code;
+      btn.onclick = () => {
+        card.classList.remove("swipe-NW", "swipe-NL", "swipe-NS");
+        card.classList.add(`swipe-${code}`);
+        card.style.transform = "translateX(0)";
+      };
+      actions.appendChild(btn);
+    });
+
     const bar = document.createElement("div");
     bar.className = "flight-bar";
     bar.style.backgroundColor = flight.isMainline ? "#007aff" : "#ff3b30";
@@ -106,19 +119,21 @@ function renderFlightList() {
 
     if (flight.collapsed) card.classList.add("collapsed");
 
+    card.appendChild(actions);
     card.appendChild(bar);
     card.appendChild(content);
     list.appendChild(card);
-    updateCountdown(flight);
 
-    enableSwipe(card, flight.flightNumber);
+    updateCountdown(flight);
+    enableSwipeDrawer(card);
   });
 }
 
-function enableSwipe(card, flightNumber) {
+function enableSwipeDrawer(card) {
   let startX = 0;
   let currentX = 0;
-  let threshold = 60;
+  let threshold = 50;
+  let fullSwipe = 120;
   let active = false;
 
   card.addEventListener("touchstart", (e) => {
@@ -136,20 +151,15 @@ function enableSwipe(card, flightNumber) {
     if (!active) return;
     active = false;
 
-    if (Math.abs(currentX) > threshold) {
-      const swipedLeft = currentX < 0;
-      const shouldService = (swipeSetting === "left-service" && swipedLeft) || (swipeSetting === "left-delete" && !swipedLeft);
-
-      if (shouldService) {
-        card.classList.remove("swipe-delete");
-        card.classList.add("swipe-serviced");
-        card.style.transform = "translateX(0)";
-      } else {
-        card.classList.remove("swipe-serviced");
-        card.classList.add("swipe-delete");
-        card.style.transform = "translateX(100%)";
-        setTimeout(() => card.remove(), 300);
-      }
+    if (currentX > threshold) {
+      card.style.transform = "translateX(100%)";
+      setTimeout(() => card.remove(), 250);
+    } else if (currentX < -fullSwipe) {
+      card.classList.remove("swipe-NW", "swipe-NL", "swipe-NS");
+      card.classList.add("swipe-NS");
+      card.style.transform = "translateX(0)";
+    } else if (currentX < -threshold) {
+      card.style.transform = "translateX(-100px)";
     } else {
       card.style.transform = "translateX(0)";
     }
@@ -178,27 +188,9 @@ function updateCountdown(flight) {
 
   timer.textContent = `${prefix}${minutes}:${seconds}`;
   if (eta) eta.textContent = formatTime(flight.eta);
-
-  const card = document.getElementById(`card-${flight.flightNumber}`);
-  card.className = `flight-card ${flight.isMainline ? "mainline" : "regional"}`;
-
-  if (diff <= 0) {
-    card.classList.add("expired");
-  } else if (diff <= 300) {
-    card.classList.add("urgent", flight.isMainline ? "mainline" : "regional");
-  } else if (diff <= 900) {
-    card.classList.add(flight.isMainline ? "warning-mainline" : "warning-regional");
-  } else {
-    card.classList.add("on-time");
-  }
-
-  if (flight.collapsed) card.classList.add("collapsed");
 }
 
 function isMainlineFlight(flightNum) {
   const num = parseInt(flightNum);
-  return (
-    (num >= 1 && num <= 2949) ||
-    (num >= 6300 && num <= 6349)
-  );
+  return (num >= 1 && num <= 2949) || (num >= 6300 && num <= 6349);
 }
