@@ -7,13 +7,11 @@ const filterPanel = document.getElementById("filter-panel");
 
 let flights = [];
 
-// Hamburger toggle
 hamburger.addEventListener("click", () => {
   hamburger.classList.toggle("open");
   filterPanel.classList.toggle("open");
 });
 
-// Input: numeric only + 4 digit auto-submit
 input.addEventListener("input", (e) => {
   e.target.value = e.target.value.replace(/\D/g, "");
   if (e.target.value.length === 4) {
@@ -75,7 +73,7 @@ function renderFlightList() {
     const topRow = `
       <div class="flight-row flight-row-main">
         <div>${flight.flightNumber}${flight.collapsed ? "" : ` (${flight.aircraftType})`}</div>
-        <div>${flight.collapsed ? `Gate ${flight.gate}` : `ETA: <span id="eta-${flight.flightNumber}">${formatTime(flight.eta)}</span>`}</div>
+        <div>${flight.collapsed ? `Gate ${flight.gate}` : flight.gate}</div>
         <div class="fixed-timer"><span id="timer-${flight.flightNumber}">--:--</span></div>
       </div>`;
 
@@ -83,7 +81,7 @@ function renderFlightList() {
       <div class="flight-row">
         <div>Origin: ${flight.origin}</div>
         <div>${flight.status}</div>
-        <div>Gate: ${flight.gate}</div>
+        <div>ETA: <span id="eta-${flight.flightNumber}">${formatTime(flight.eta)}</span></div>
       </div>`;
 
     content.innerHTML = topRow + midRows;
