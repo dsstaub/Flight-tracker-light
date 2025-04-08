@@ -42,7 +42,8 @@ function addFlight(flightNum) {
     eta,
     gate: "B24",
     isMainline: isMainlineFlight(flightNum),
-    collapsed: false
+    collapsed: true,
+    manualToggleTime: null,
   };
 
   flights.push(flight);
@@ -93,6 +94,7 @@ function renderFlightList() {
 
     content.addEventListener("click", () => {
       flight.collapsed = !flight.collapsed;
+      flight.manualToggleTime = Date.now();
       renderFlightList();
     });
 
@@ -137,10 +139,27 @@ function updateCountdown(flight) {
     card.classList.add("on-time");
   }
 
+  // TIMING-BASED COLLAPSE/EXPAND
+  const within15Min = diff <= 900;
+  const timeSinceToggle = flight.manualToggleTime ? (Date.now() - flight.manualToggleTime) / 1000 : Infinity;
+
+  if (!flight.manualToggleTime) {
+    flight.collapsed = !within15Min;
+  } else if (!within15Min && !flight.collapsed && timeSinceToggle > 30) {
+    flight.collapsed = true;
+    flight.manualToggleTime = null;
+  } else if (within15Min && flight.collapsed && timeSinceToggle > 30) {
+    flight.collapsed = false;
+    flight.manualToggleTime = null;
+  }
+
   if (flight.collapsed) card.classList.add("collapsed");
 }
 
 function isMainlineFlight(flightNum) {
   const num = parseInt(flightNum);
-  return (num >= 1 && num <= 2949) || (num >= 6300 && num <= 6349);
+  return (
+    (num >= 1 && num <= 2949) || 
+    (num >= 6300 && num <= 6349)
+  );
 }
