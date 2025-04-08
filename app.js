@@ -8,7 +8,6 @@ const filterPanel = document.getElementById("filter-panel");
 let flights = [];
 
 hamburger.addEventListener("click", () => {
-  hamburger.classList.toggle("open");
   filterPanel.classList.toggle("open");
 });
 
@@ -144,8 +143,5 @@ function updateCountdown(flight) {
 
 function isMainlineFlight(flightNum) {
   const num = parseInt(flightNum);
-  return (
-    (num >= 1 && num <= 2949) ||
-    (num >= 6300 && num <= 6349)
-  );
+  return (num >= 1 && num <= 2949) || (num >= 6300 && num <= 6349);
 }
