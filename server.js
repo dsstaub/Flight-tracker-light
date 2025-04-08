@@ -5,7 +5,7 @@ const cors = require("cors");
 const app = express();
 const PORT = process.env.PORT || 3001;
 const API_KEY = process.env.FLIGHTLABS_API_KEY;
-
+ 
 app.use(cors());
 
 app.get("/api/flight/:flightNumber", async (req, res) => {
