@@ -35,6 +35,7 @@ function addFlight(flightNum) {
   const eta = new Date(now.getTime() + Math.floor(Math.random() * 60 + 5) * 60000);
   const flight = {
     flightNumber: flightNum,
+    tailNumber: "N844NN",
     origin: "DFW",
     aircraftType: "A319",
     status: "En Route",
@@ -70,9 +71,13 @@ function renderFlightList() {
     content.className = "flight-content";
     if (flight.collapsed) card.classList.add("collapsed");
 
+    const flightLabel = flight.collapsed
+      ? flight.flightNumber
+      : `${flight.flightNumber} [${flight.tailNumber}] (${flight.aircraftType})`;
+
     const topRow = `
       <div class="flight-row flight-row-main">
-        <div>${flight.flightNumber}${flight.collapsed ? "" : ` (${flight.aircraftType})`}</div>
+        <div>${flightLabel}</div>
         <div>${flight.collapsed ? `Gate ${flight.gate}` : flight.gate}</div>
         <div class="fixed-timer"><span id="timer-${flight.flightNumber}">--:--</span></div>
       </div>`;
