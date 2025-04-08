@@ -18,7 +18,7 @@ body {
   margin-bottom: 10px;
 }
 
-/* Layout fix */
+/* HEADER FIX */
 .header {
   display: flex;
   align-items: center;
@@ -26,9 +26,10 @@ body {
   gap: 12px;
   margin-bottom: 20px;
   padding: 0 4px;
+  min-height: 40px;
 }
 
-/* Hamburger Menu */
+/* HAMBURGER MENU */
 .hamburger {
   width: 30px;
   height: 24px;
@@ -39,6 +40,11 @@ body {
   background: none;
   border: none;
   cursor: pointer;
+  flex-shrink: 0;
+  z-index: 10;
+  /* Uncomment for debug:
+  background-color: red;
+  */
 }
 
 .bar {
@@ -65,7 +71,6 @@ body {
   background-color: #aaa;
 }
 
-/* Filter Panel Toggle */
 #filter-panel {
   display: none;
   margin-bottom: 20px;
@@ -74,9 +79,11 @@ body {
   display: block;
 }
 
-/* Input & Form */
+/* Form & input sizing */
 form {
   flex-grow: 1;
+  flex-shrink: 1;
+  min-width: 0;
 }
 input[type="text"], select {
   padding: 10px;
@@ -156,27 +163,25 @@ input[type="text"], select {
   padding-right: 6px;
 }
 
-/* Flight Card States */
+/* Status Colors */
 .on-time {
   background-color: #222;
   color: white;
 }
-
 .warning-mainline {
   background-color: #007aff;
   color: white;
 }
-
 .warning-regional {
   background-color: #ff3b30;
   color: white;
 }
-
 .expired {
   background-color: #5c1111;
   color: white;
 }
 
+/* Pulsing Yellow Alert */
 .urgent.mainline {
   animation: pulseYellowMainlineBG 4s infinite ease-in-out;
 }
