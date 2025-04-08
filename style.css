@@ -11,211 +11,34 @@ body {
   margin: auto;
 }
 
-.app-title {
-  text-align: center;
-  font-size: 1.4rem;
-  color: white;
-  margin-bottom: 10px;
-}
-
-.header {
+form, .sort-options {
   display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 12px;
   margin-bottom: 20px;
-  padding: 0 4px;
-  min-height: 40px;
-}
-
-.hamburger {
-  width: 36px;
-  height: 30px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 0;
-  background: none;
-  border: none;
-  cursor: pointer;
-  flex-shrink: 0;
-  z-index: 10;
-}
-
-.bar {
-  width: 100%;
-  height: 3px;
-  background-color: white;
-  border-radius: 2px;
-  transition: all 0.3s ease;
-}
-
-.hamburger.open .bar:nth-child(1) {
-  transform: rotate(45deg) translate(5px, 5px);
-}
-.hamburger.open .bar:nth-child(2) {
-  opacity: 0;
-}
-.hamburger.open .bar:nth-child(3) {
-  transform: rotate(-45deg) translate(6px, -6px);
-}
-.hamburger:hover .bar {
-  background-color: #aaa;
-}
-
-form {
-  flex: 1;
-  max-width: calc(100% - 48px);
-  flex-shrink: 1;
-  min-width: 0;
+  gap: 10px;
 }
 
 input[type="text"], select {
+  flex: 1;
   padding: 10px;
   font-size: 18px;
   border: none;
   border-radius: 4px;
-  width: 100%;
 }
 
-#filter-panel {
-  display: none;
-  margin-bottom: 20px;
-}
-#filter-panel.open {
-  display: block;
+button {
+  padding: 10px 20px;
+  font-size: 18px;
+  border: none;
+  background: #007aff;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
 }
 
 .card-list {
   display: flex;
   flex-direction: column;
   gap: 12px;
-}
-
-.flight-card {
-  display: flex;
-  border-radius: 8px;
-  overflow: hidden;
-  min-height: 80px;
-  transition: background-color 0.5s ease;
-}
-
-.flight-bar {
-  width: 6px;
-}
-
-.flight-content {
-  padding: 12px 16px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  cursor: pointer;
-}
-
-.flight-row {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  font-size: 16px;
-  margin-bottom: 4px;
-}
-.flight-row > div {
-  flex: 1;
-  text-align: center;
-}
-
-.flight-row-main {
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.fixed-timer {
-  font-family: monospace;
-  min-width: 68px;
-  text-align: right;
-}
-
-/* COLLAPSED CARD: HALF HEIGHT */
-.flight-card.collapsed {
-  min-height: 40px;
-}
-.flight-card.collapsed .flight-content {
-  padding-top: 4px;
-  padding-bottom: 4px;
-}
-.flight-card.collapsed .flight-row > div {
-  font-size: 18px;
-  flex: 1;
-}
-.flight-card.collapsed .flight-row > div:first-child {
-  text-align: left;
-  padding-left: 6px;
-}
-.flight-card.collapsed .flight-row > div:last-child {
-  text-align: right;
-  padding-right: 6px;
-}
-
-.on-time {
-  background-color: #222;
-  color: white;
-}
-.warning-mainline {
-  background-color: #007aff;
-  color: white;
-}
-.warning-regional {
-  background-color: #ff3b30;
-  color: white;
-}
-.expired {
-  background-color: #5c1111;
-  color: white;
-}
-
-.urgent.mainline {
-  animation: pulseYellowMainlineBG 4s infinite ease-in-out;
-}
-.urgent.regional {
-  animation: pulseYellowRegionalBG 4s infinite ease-in-out;
-}
-.flight-card.urgent .flight-content {
-  animation: pulseYellowText 4s infinite ease-in-out;
-}
-
-@keyframes pulseYellowMainlineBG {
-  0%, 49% { background-color: #ffeb3b; }
-  50%, 100% { background-color: #007aff; }
-}
-@keyframes pulseYellowRegionalBG {
-  0%, 49% { background-color: #ffeb3b; }
-  50%, 100% { background-color: #ff3b30; }
-}
-@keyframes pulseYellowText {
-  0%, 49% { color: black; }
-  50%, 100% { color: white; }
-}
-
-.swipe-settings {
-  margin-top: 12px;
-  font-size: 14px;
-  color: #ccc;
-}
-
-.flight-card.swipe-delete {
-  background-color: #5c1111 !important;
-  border-left-color: red !important;
-}
-
-.flight-card.swipe-serviced {
-  background-color: #1b3f25 !important;
-  border-left-color: #28a745 !important;
-}
-
-.flight-card {
-  touch-action: pan-y;
-  transition: transform 0.2s ease;
 }
 
 .flight-card {
@@ -227,6 +50,17 @@ input[type="text"], select {
   transition: transform 0.2s ease;
   touch-action: pan-y;
   overflow: hidden;
+}
+
+.flight-bar {
+  width: 6px;
+}
+
+.flight-content {
+  position: relative;
+  z-index: 1;
+  background: #222;
+  transition: background 0.3s;
 }
 
 .card-actions {
@@ -258,13 +92,6 @@ input[type="text"], select {
   background: #666;
 }
 
-.flight-content {
-  position: relative;
-  z-index: 1;
-  background: #222;
-  transition: background 0.3s;
-}
-
 .swipe-NW {
   background-color: #005f99 !important;
   border-left-color: #005f99 !important;
@@ -278,4 +105,10 @@ input[type="text"], select {
 .swipe-NS {
   background-color: #1b3f25 !important;
   border-left-color: #28a745 !important;
+}
+
+.swipe-settings {
+  margin-top: 12px;
+  font-size: 14px;
+  color: #ccc;
 }
