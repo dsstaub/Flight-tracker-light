@@ -72,19 +72,6 @@ function renderFlightList() {
     card.className = `flight-card ${flight.isMainline ? "mainline" : "regional"}`;
     card.id = `card-${flight.flightNumber}`;
 
-    const actions = document.createElement("div");
-    actions.className = "card-actions";
-    ["NW", "NL", "NS"].forEach(code => {
-      const btn = document.createElement("button");
-      btn.textContent = code;
-      btn.onclick = () => {
-        card.classList.remove("swipe-NW", "swipe-NL", "swipe-NS");
-        card.classList.add(`swipe-${code}`);
-        card.style.transform = "translateX(0)";
-      };
-      actions.appendChild(btn);
-    });
-
     const bar = document.createElement("div");
     bar.className = "flight-bar";
     bar.style.backgroundColor = flight.isMainline ? "#007aff" : "#ff3b30";
@@ -111,13 +98,25 @@ function renderFlightList() {
       </div>`;
 
     content.innerHTML = topRow + midRows;
-
     content.addEventListener("click", () => {
       flight.collapsed = !flight.collapsed;
       renderFlightList();
     });
 
     if (flight.collapsed) card.classList.add("collapsed");
+
+    const actions = document.createElement("div");
+    actions.className = "card-actions";
+    ["NW", "NL", "NS"].forEach(code => {
+      const btn = document.createElement("button");
+      btn.textContent = code;
+      btn.onclick = () => {
+        card.classList.remove("swipe-NW", "swipe-NL", "swipe-NS");
+        card.classList.add(`swipe-${code}`);
+        card.style.transform = "translateX(0)";
+      };
+      actions.appendChild(btn);
+    });
 
     card.appendChild(actions);
     card.appendChild(bar);
