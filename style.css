@@ -217,3 +217,65 @@ input[type="text"], select {
   touch-action: pan-y;
   transition: transform 0.2s ease;
 }
+
+.flight-card {
+  position: relative;
+  background: #222;
+  border-left: 6px solid #007aff;
+  padding: 12px;
+  margin: 10px;
+  transition: transform 0.2s ease;
+  touch-action: pan-y;
+  overflow: hidden;
+}
+
+.card-actions {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 180px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  background: #333;
+  z-index: 0;
+}
+
+.card-actions button {
+  padding: 10px;
+  font-weight: bold;
+  font-size: 14px;
+  border: none;
+  background: #444;
+  color: white;
+  cursor: pointer;
+  border-top: 1px solid #222;
+}
+
+.card-actions button:hover {
+  background: #666;
+}
+
+.flight-content {
+  position: relative;
+  z-index: 1;
+  background: #222;
+  transition: background 0.3s;
+}
+
+.swipe-NW {
+  background-color: #005f99 !important;
+  border-left-color: #005f99 !important;
+}
+
+.swipe-NL {
+  background-color: #663399 !important;
+  border-left-color: #663399 !important;
+}
+
+.swipe-NS {
+  background-color: #1b3f25 !important;
+  border-left-color: #28a745 !important;
+}
